@@ -1,0 +1,217 @@
+=======================================
+Aula 3:
+
+threads ?
+multithreading ?
+concorrencia entre threads ?
+multiprocessing em python ?
+cpu ?
+core ?
+processo ?
+
+1. Threads 🧵
+A thread is like a mini-task inside a program. Imagine you’re cooking:
+
+You’re boiling pasta (one task).
+
+You’re chopping vegetables (another task).
+
+You’re grilling chicken (yet another task).
+
+Each of these tasks is like a thread running inside the same program (the kitchen).
+
+2. Multithreading 🔄
+Now imagine you’re cooking alone but switching between tasks.
+
+While waiting for the pasta to boil, you start chopping veggies.
+
+Then, you check on the pasta again while waiting for the chicken to grill.
+
+This is multithreading: running multiple threads in the same program to improve efficiency.
+
+Example in Python (using the threading module):
+
+python
+Copiar
+Editar
+import threading
+
+def task1():
+    print("Task 1 is running")
+
+def task2():
+    print("Task 2 is running")
+
+t1 = threading.Thread(target=task1)
+t2 = threading.Thread(target=task2)
+
+t1.start()
+t2.start()
+This will run task1 and task2 at the same time (or seem like it).
+
+3. Concurrency Between Threads ⚔️
+Concurrency means that two or more threads are trying to run at the same time, but because Python has a Global Interpreter Lock (GIL), they don't truly run in parallel on multiple CPU cores. Instead, Python switches between them very fast.
+
+This can cause problems if two threads try to modify the same variable at the same time. Example:
+
+python
+Copiar
+Editar
+import threading
+
+counter = 0  
+
+def increment():
+    global counter
+    for _ in range(100000):
+        counter += 1  
+
+t1 = threading.Thread(target=increment)
+t2 = threading.Thread(target=increment)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print(counter)  # The result may be incorrect due to race conditions!
+Since both threads modify counter at the same time, the final value might be wrong due to conflicts.
+
+To fix this, we use locks:
+
+python
+Copiar
+Editar
+lock = threading.Lock()
+
+def increment():
+    global counter
+    for _ in range(100000):
+        with lock:
+            counter += 1  # Now only one thread can modify this at a time
+Now, no two threads will modify counter at the same time.
+
+4. Multiprocessing in Python 🖥️🖥️
+Unlike multithreading, where threads share the same memory, multiprocessing runs each task in a separate process, each with its own memory. This allows real parallel execution on multiple CPU cores.
+
+Example using multiprocessing:
+
+python
+Copiar
+Editar
+import multiprocessing
+
+def task():
+    print("Task running in a separate process")
+
+p = multiprocessing.Process(target=task)
+p.start()
+p.join()
+Since it's a new process, it runs independently of other processes.
+
+🚀 Why use multiprocessing?
+
+It bypasses the GIL (because each process has its own memory space).
+
+It’s great for CPU-heavy tasks like image processing or number crunching.
+
+5. CPU (Central Processing Unit) 🧠
+The CPU is like the brain of your computer. It processes all the instructions from your programs. The faster the CPU, the quicker things run.
+
+6. Core ⚙️
+A CPU core is like a worker inside the CPU.
+
+If you have a single-core CPU, it can do one thing at a time.
+
+A quad-core CPU can handle four things at the same time.
+
+Modern CPUs have many cores for handling multiple tasks at once.
+
+7. Process 🏭
+A process is an independent program running on your computer.
+
+When you open Chrome, it’s a process.
+
+When you open Spotify, it’s another process.
+
+When you open VS Code, it’s yet another process.
+
+Each process has its own memory and doesn’t interfere with other processes.
+
+🚀 Threads vs. Processes
+
+Threads share memory inside a process.
+
+Processes are independent and don’t share memory.
+
+Summary
+✅ Threads → Small tasks inside a program.
+✅ Multithreading → Running multiple threads (but limited by GIL in Python).
+✅ Concurrency Between Threads → Threads switching fast, can cause conflicts.
+✅ Multiprocessing → Running multiple processes (real parallelism).
+✅ CPU → The brain of your computer.
+✅ Core → A worker inside the CPU (more cores = more parallel tasks).
+✅ Process → A running program, independent from others.
+
+
+
+Concorrencia nas threads e concorrencia nos processos
+
+
+CPU = cerebro
+
+Core = O CPU tem nucleos = +e uma chapa escurecida que tem milhoes de transistors. Esses transistors fazem portas logicas.
+
+Os CPUs de agora têm varios cores
+
+I7 => 4Core Dividido em duas
+
+CPU cerebro do pc, e cores/nucleos (unidades mais pequenas que processam tarefas)
+
+
+O Python é single threaded: por defeito ele so vai usar uma core. Quando fazemos algo no python, ele cria um processo
+
+um processo é um registo no cpu de um processo que está a acontecer
+
+
+um processo vai ter sermpre uma 'main thread'. Isto é o que permite ao cpu 'olhar e processar'
+
+Cada core so executa uma tarefa de cada vez.
+
+GIL: Global Interpreter Lock
+
+Uma tread é um processo
+
+Uma tread pode criar subtreads (ou não), ou seja, uma tarefa pode criar subtarefas (podaços de trabalho)
+
+As treads filhas só sáo criadas se NÓS programadores as criarmos no código, por defeito so existe uma tread
+
+Main thread
+_____________________________________
+
+Thread 1
+    ___________________________
+
+            Thread 2
+            __________________
+
+                Thread 3
+                ____________
+
+ISTO É Multithreading
+Usa-se em operações de INPUT E OUTPUT
+
+
+tamboem existe Multiprocessing
+
+usar em Cenas computacionais
+
+
+=============================================================================
+AULA 4
+=============================================================================
+
+
+
+
